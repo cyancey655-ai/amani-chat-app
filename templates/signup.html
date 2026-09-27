@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Sign up — Amani Chat{% endblock %}
+{% block content %}
+<section class="auth">
+  <h1>Create your account</h1>
+  <p class="sub">30 seconds and you're talking to her.</p>
+  <form method="post" class="form">
+    <label>Email
+      <input type="email" name="email" required autocomplete="email" placeholder="you@example.com">
+    </label>
+    <label>Password <span class="hint">(min 8 characters)</span>
+      <input type="password" name="password" required minlength="8" autocomplete="new-password" placeholder="••••••••">
+    </label>
+    <label class="check">
+      <input type="checkbox" name="age_ok" value="1" required>
+      I confirm I am 18 years or older.
+    </label>
+    <button type="submit" class="btn btn-primary btn-lg">Sign up</button>
+  </form>
+  <p class="swap">Already have an account? <a href="{{ url_for('auth.login') }}">Log in</a></p>
+</section>
+{% endblock %}

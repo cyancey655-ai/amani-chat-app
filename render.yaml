@@ -1,0 +1,31 @@
+# Render deploy config — free tier
+services:
+  - type: web
+    name: amani-chat
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn wsgi:app --bind 0.0.0.0:$PORT --workers 2 --timeout 90
+    envVars:
+      - key: SECRET_KEY
+        generateValue: true
+      - key: SECURE_COOKIES
+        value: "1"
+      - key: APP_BASE_URL
+        sync: false            # set to your https://amani-chat.onrender.com URL
+      - key: DATABASE_URL
+        sync: false            # optional: Render Postgres internal URL
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: OPENAI_MODEL
+        value: gpt-4o-mini
+      - key: STRIPE_SECRET_KEY
+        sync: false
+      - key: STRIPE_WEBHOOK_SECRET
+        sync: false
+      - key: STRIPE_PRICE_MONTHLY
+        sync: false
+      - key: STRIPE_PRICE_METERED
+        sync: false
+      - key: STRIPE_METER_EVENT_NAME
+        value: amani_chat_minute

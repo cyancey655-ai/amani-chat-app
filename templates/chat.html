@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Chat with {{ companion.name }} — Amani Chat{% endblock %}
+{% block content %}
+<section class="chat-room" data-companion="{{ companion.id }}"
+         data-conversation="{{ conversation.id if conversation else '' }}"
+         data-pitch="{{ companion.voice_pitch }}" data-rate="{{ companion.voice_rate }}"
+         data-name="{{ companion.name }}" data-greeting="{{ companion.greeting|e }}">
+  <div class="chat-head">
+    <img src="{{ url_for('static', filename=companion.image) }}" alt="{{ companion.name }}">
+    <div>
+      <h1>{{ companion.name }}</h1>
+      <p class="tagline">{{ companion.tagline }}</p>
+    </div>
+    <a href="{{ url_for('chat.choose') }}" class="btn btn-ghost">Switch girl</a>
+  </div>
+
+  {% if ai_demo %}
+  <div class="notice">Demo mode: replies are stubbed. Add your AI key for real conversations.</div>
+  {% endif %}
+  {% if stripe_demo and current_user.is_metered %}
+  <div class="notice">Demo mode: minutes are counted locally — nothing is really charged.</div>
+  {% endif %}
+
+  <div id="messages" class="messages"></div>
+
+  <div class="composer">
+    <button id="mic-btn" class="btn btn-ghost" title="Voice input">🎤</button>
+    <input id="msg-input" type="text" placeholder="Say something to {{ companion.name }}..." autocomplete="off" maxlength="2000">
+    <button id="send-btn" class="btn btn-primary">Send</button>
+    <button id="tts-btn" class="btn btn-ghost" title="Toggle spoken replies">🔊</button>
+  </div>
+  <p id="minute-note" class="fine"></p>
+</section>
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/chat.js') }}"></script>
+{% endblock %}

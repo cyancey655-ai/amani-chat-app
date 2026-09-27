@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}Pricing — Amani Chat{% endblock %}
+{% block content %}
+<section class="pricing">
+  <h1>Simple pricing</h1>
+  <p class="sub">Pay as you go, or go unlimited. Cancel anytime.</p>
+  {% if error %}<div class="flash flash-error">{{ error }}</div>{% endif %}
+  {% if stripe_demo %}
+  <div class="notice">Demo mode: Stripe isn't connected, so these buttons activate a <strong>demo plan</strong> — no real payment happens.</div>
+  {% endif %}
+  <div class="plans">
+    <div class="plan">
+      <h2>Pay per minute</h2>
+      <p class="amount">$1.00<span>/started minute</span></p>
+      <ul>
+        <li>No commitment</li>
+        <li>A "started minute" = any minute you send a message</li>
+        <li>Billed monthly through Stripe</li>
+      </ul>
+      {% if current_user.is_authenticated %}
+      <form method="post" action="{{ url_for('billing.checkout', plan='metered') }}">
+        <button class="btn btn-primary btn-lg" type="submit">
+          {% if stripe_demo %}Activate demo pay-per-minute{% else %}Start pay-per-minute{% endif %}
+        </button>
+      </form>
+      {% else %}
+      <a href="{{ url_for('auth.signup') }}" class="btn btn-primary btn-lg">Sign up to start</a>
+      {% endif %}
+    </div>
+    <div class="plan featured">
+      <div class="badge">Most popular</div>
+      <h2>Monthly Unlimited</h2>
+      <p class="amount">$24.99<span>/month</span></p>
+      <ul>
+        <li>Unlimited chat — <strong>no per-minute charge</strong></li>
+        <li>All 7 companions</li>
+        <li>Voice chat included</li>
+        <li>Cancel anytime</li>
+      </ul>
+      {% if current_user.is_authenticated %}
+      <form method="post" action="{{ url_for('billing.checkout', plan='monthly') }}">
+        <button class="btn btn-primary btn-lg" type="submit">
+          {% if stripe_demo %}Activate demo subscription{% else %}Subscribe — $24.99/mo{% endif %}
+        </button>
+      </form>
+      {% else %}
+      <a href="{{ url_for('auth.signup') }}" class="btn btn-primary btn-lg">Sign up to subscribe</a>
+      {% endif %}
+    </div>
+  </div>
+  <p class="fine">18+ only. By paying you agree to the <a href="{{ url_for('main.terms') }}">Terms</a>.</p>
+</section>
+{% endblock %}

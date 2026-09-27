@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Choose your girl — Amani Chat{% endblock %}
+{% block content %}
+<section class="lineup slim">
+  <h1>Who's it gonna be?</h1>
+  {% if conversations %}
+  <h2>Recent conversations</h2>
+  <div class="recent">
+    {% for conv in conversations %}
+    <a class="recent-item" href="{{ url_for('chat.room', companion_id=conv.companion_id, c=conv.id) }}">
+      Continue with {{ conv.companion_id|capitalize }}
+    </a>
+    {% endfor %}
+  </div>
+  {% endif %}
+  <div class="cards">
+    {% for c in companions %}
+    <div class="card">
+      <div class="card-media">
+        <img src="{{ url_for('static', filename=c.image) }}" alt="{{ c.name }}" loading="lazy">
+        <video class="intro-video" src="{{ url_for('static', filename=c.video) }}" muted loop playsinline preload="none" poster="{{ url_for('static', filename=c.image) }}"></video>
+        <button class="play-btn" aria-label="Play {{ c.name }} intro">▶</button>
+      </div>
+      <h3>{{ c.name }}</h3>
+      <p class="tagline">{{ c.tagline }}</p>
+      <a href="{{ url_for('chat.room', companion_id=c.id) }}" class="btn btn-primary">Chat with {{ c.name }}</a>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}
+{% block scripts %}
+<script>
+document.querySelectorAll('.card').forEach(function (card) {
+  var video = card.querySelector('.intro-video');
+  var btn = card.querySelector('.play-btn');
+  btn.addEventListener('click', function () {
+    if (video.paused) { video.play(); btn.textContent = '⏸'; }
+    else { video.pause(); btn.textContent = '▶'; }
+  });
+});
+</script>
+{% endblock %}

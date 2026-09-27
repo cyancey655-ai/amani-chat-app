@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block title %}Amani Chat — Pick your girl, start talking{% endblock %}
+{% block content %}
+
+<!-- 18+ age gate -->
+<div id="age-gate" class="age-gate" hidden>
+  <div class="age-card">
+    <h1>Amani Chat</h1>
+    <p>This site contains adult-oriented AI companions.<br>You must be 18 or older to enter.</p>
+    <div class="age-actions">
+      <button class="btn btn-primary" id="age-yes">I'm 18 or older — enter</button>
+      <a class="btn btn-ghost" href="https://www.google.com">I'm under 18</a>
+    </div>
+  </div>
+</div>
+
+<section class="hero">
+  <h1>Pick your girl. <span>Start talking.</span></h1>
+  <p class="sub">Seven stunning AI companions waiting for your call — flirty, bubbly, and they speak your language.</p>
+  <div class="price-strip">
+    <div class="price-chip"><strong>$1.00</strong> per started minute</div>
+    <div class="price-chip hot"><strong>$24.99/mo</strong> unlimited — no per-minute charge</div>
+  </div>
+  <a href="{{ url_for('auth.signup') }}" class="btn btn-primary btn-lg">Start chatting now</a>
+</section>
+
+<section class="lineup">
+  <h2>The lineup</h2>
+  <div class="cards">
+    {% for c in companions %}
+    <div class="card">
+      <div class="card-media">
+        <img src="{{ url_for('static', filename=c.image) }}" alt="{{ c.name }}" loading="lazy">
+        <video class="intro-video" src="{{ url_for('static', filename=c.video) }}" muted loop playsinline preload="none" poster="{{ url_for('static', filename=c.image) }}"></video>
+        <button class="play-btn" aria-label="Play {{ c.name }} intro">▶</button>
+      </div>
+      <h3>{{ c.name }}</h3>
+      <p class="tagline">{{ c.tagline }}</p>
+      <p class="personality">{{ c.personality }}</p>
+      <p class="greeting">"{{ c.greeting }}"</p>
+      <a href="{{ url_for('auth.signup') }}" class="btn btn-primary">Chat with {{ c.name }}</a>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="how">
+  <h2>How it works</h2>
+  <ol>
+    <li><strong>Sign up</strong> with your email — takes 30 seconds.</li>
+    <li><strong>Pick a plan:</strong> $1.00 per started minute, or $24.99/month unlimited.</li>
+    <li><strong>Choose your girl</strong> and start chatting — text or voice, in any language.</li>
+  </ol>
+  <a href="{{ url_for('billing.pricing') }}" class="btn btn-primary btn-lg">See pricing</a>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// 18+ gate (remembered in this browser)
+(function () {
+  var gate = document.getElementById('age-gate');
+  try {
+    if (localStorage.getItem('amani_age_ok') === '1') return;
+  } catch (e) { /* private mode */ }
+  gate.hidden = false;
+  document.getElementById('age-yes').addEventListener('click', function () {
+    try { localStorage.setItem('amani_age_ok', '1'); } catch (e) {}
+    gate.hidden = true;
+  });
+})();
+
+// Video intro play buttons
+document.querySelectorAll('.card').forEach(function (card) {
+  var video = card.querySelector('.intro-video');
+  var btn = card.querySelector('.play-btn');
+  btn.addEventListener('click', function () {
+    if (video.paused) { video.play(); btn.textContent = '⏸'; }
+    else { video.pause(); btn.textContent = '▶'; }
+  });
+});
+</script>
+{% endblock %}

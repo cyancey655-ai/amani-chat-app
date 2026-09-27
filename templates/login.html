@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Log in — Amani Chat{% endblock %}
+{% block content %}
+<section class="auth">
+  <h1>Welcome back</h1>
+  <p class="sub">She missed you.</p>
+  <form method="post" class="form">
+    <label>Email
+      <input type="email" name="email" required autocomplete="email" placeholder="you@example.com">
+    </label>
+    <label>Password
+      <input type="password" name="password" required autocomplete="current-password" placeholder="••••••••">
+    </label>
+    <button type="submit" class="btn btn-primary btn-lg">Log in</button>
+  </form>
+  <p class="swap">New here? <a href="{{ url_for('auth.signup') }}">Create an account</a></p>
+</section>
+{% endblock %}

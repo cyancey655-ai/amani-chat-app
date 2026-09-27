@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}Payment canceled — Amani Chat{% endblock %}
+{% block content %}
+<section class="auth center">
+  <h1>No worries</h1>
+  <p class="sub">Your payment was canceled — nothing was charged.</p>
+  <a href="{{ url_for('billing.pricing') }}" class="btn btn-primary btn-lg">Back to pricing</a>
+</section>
+{% endblock %}

@@ -1,0 +1,10 @@
+# Pinned production dependencies
+Flask==3.1.0
+Flask-SQLAlchemy==3.1.1
+Flask-Login==0.6.3
+Flask-Limiter==3.8.0
+stripe==10.2.0
+requests==2.32.3
+gunicorn==23.0.0
+psycopg2-binary==2.9.10
+Werkzeug==3.1.3
