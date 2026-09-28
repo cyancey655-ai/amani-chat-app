@@ -32,10 +32,14 @@ def create_checkout_session(config, user, plan):
         raise DemoModeError(f"Stripe price id for plan '{plan}' is not configured.")
 
     base = config["APP_BASE_URL"]
+    line_item = {"price": price}
+    if plan == "monthly":
+        # Metered prices must not specify a quantity (Stripe rejects it).
+        line_item["quantity"] = 1
     session = stripe.checkout.Session.create(
         mode="subscription",
         customer_email=user.email,
-        line_items=[{"price": price, "quantity": 1}],
+        line_items=[line_item],
         success_url=f"{base}/billing/success?session_id={{CHECKOUT_SESSION_ID}}",
         cancel_url=f"{base}/billing/cancel",
         metadata={"user_id": str(user.id), "plan": plan},
