@@ -1,4 +1,5 @@
 """Amani Chat — Flask application factory."""
+import mimetypes
 import os
 
 from flask import Flask
@@ -8,6 +9,9 @@ from flask_login import LoginManager
 
 from .config import Config
 from .models import User, db
+
+# Serve the PWA manifest with the correct content type
+mimetypes.add_type("application/manifest+json", ".webmanifest")
 
 login_manager = LoginManager()
 login_manager.login_view = "auth.login"
