@@ -15,6 +15,9 @@ def _client(config):
     if not key:
         raise DemoModeError("Stripe is not configured (demo mode).")
     stripe.api_key = key
+    # This Stripe account has Managed Payments enabled, which requires
+    # API version 2025-03-31.basil or greater (the SDK default is older).
+    stripe.api_version = "2025-03-31.basil"
     return stripe
 
 
