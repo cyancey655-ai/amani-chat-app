@@ -29,18 +29,24 @@ def chat_reply(companion_id, history, config):
     # Keep the last 30 messages to bound token usage.
     messages += history[-30:]
 
+    payload = {
+        "model": config["OPENAI_MODEL"],
+        "messages": messages,
+        "temperature": 0.9,
+        "max_tokens": 220,
+    }
+    # Gemini's newer models "think" before answering and those thinking tokens
+    # eat the max_tokens budget, which cuts replies off mid-sentence. Turn it off.
+    if "generativelanguage.googleapis.com" in config["OPENAI_BASE_URL"]:
+        payload["extra_body"] = {"google": {"thinking_config": {"thinking_budget": 0}}}
+
     resp = requests.post(
         f"{config['OPENAI_BASE_URL']}/chat/completions",
         headers={
             "Authorization": f"Bearer {config['OPENAI_API_KEY']}",
             "Content-Type": "application/json",
         },
-        json={
-            "model": config["OPENAI_MODEL"],
-            "messages": messages,
-            "temperature": 0.9,
-            "max_tokens": 220,
-        },
+        json=payload,
         timeout=60,
     )
     resp.raise_for_status()
